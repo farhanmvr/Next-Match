@@ -17,6 +17,7 @@ model User {
   accounts      Account[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  member        Member?
 }
 
 model Account {
@@ -36,4 +37,30 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  name        String
+  gender      String
+  dateOfBirth DateTime
+  description String
+  city        String
+  country     String
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  photos      Photo[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Photo {
+  id       String  @id @default(cuid())
+  url      String
+  publicId String?
+  memberId String
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }
